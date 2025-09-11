@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Colores principales
-  static const Color primary = Color(0xFF1565C0);   // Azul fuerte
+  static const Color primary = Color(0xFF26C6DA);   // Azul fuerte
   static const Color secondary = Color(0xFFFFA000); // Naranja
   static const Color accent = Color(0xFF26C6DA);    // Aqua
 
@@ -13,7 +13,7 @@ class AppColors {
 
   // Fondo
   static const Color background = Color(0xFFF5F5F5); // Gris claro
-  static const Color card = Colors.white;
+  static const Color cardWhite = Colors.white;
 
   // Estados
   static const Color success = Color(0xFF4CAF50); // Verde

@@ -3,7 +3,7 @@
 class AppConfig {
   static const sampleConfig = (
     id: 'Nombre App',
-    displayName: 'Nombre de la empresa',
+    displayName: 'Configuración',
     primary: '#0ea5e9',
     accent: '#10b981',
     apiBase: 'https://api.App.com',

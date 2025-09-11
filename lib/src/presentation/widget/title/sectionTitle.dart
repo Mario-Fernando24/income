@@ -10,7 +10,7 @@ class SectionTitle extends StatelessWidget {
       text,
       style: Theme.of(context).textTheme.titleSmall!.copyWith(
         letterSpacing: 1.1,
-        fontWeight: FontWeight.bold,
+        fontFamily: 'MontserratSemiBold',
         color: Theme.of(context).colorScheme.primary,
       ),
     ),

@@ -1,35 +1,46 @@
 import 'package:flutter/material.dart';
 
-class ModernField extends StatelessWidget {
-  final TextEditingController controller;
-  final String? hint;
+class DefaultTextField extends StatelessWidget {
+  final String text;
+  final Function(String text) onChanged;
+  final IconData icon;
+  final EdgeInsetsGeometry margin;
+  final String? Function(String?)? validate;
   final TextInputType? keyboard;
-  final IconData? icon;
   final bool obscure;
+  final double? size;
+  final TextEditingController? controller;
 
-  const ModernField({
+  const DefaultTextField({
     super.key,
-    required this.controller,
-    this.hint,
+    required this.text,
+    required this.onChanged,
+    required this.icon,
+    this.margin = const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+    this.validate,
     this.keyboard,
-    this.icon,
     this.obscure = false,
+    this.size = 14,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+    return Container(
+      margin: margin,
       child: TextFormField(
         controller: controller,
         keyboardType: keyboard,
         obscureText: obscure,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        validator: validate,
+        style: TextStyle(
+          fontSize: size,
+          fontFamily: 'MontserratLight',
+        ),
+        onChanged: (texto) => onChanged(texto),
         decoration: InputDecoration(
-          prefixIcon: icon != null
-              ? Icon(icon, color: Theme.of(context).colorScheme.primary)
-              : null,
-          hintText: hint,
+          prefixIcon: Icon(icon, color: Theme.of(context).colorScheme.primary),
+          hintText: text,
           floatingLabelBehavior: FloatingLabelBehavior.auto,
           filled: true,
           fillColor: Theme.of(context).colorScheme.surfaceVariant,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tickets_ingresos/src/config/app_theme.dart';
 import 'package:tickets_ingresos/src/presentation/utils/olor_parser.dart';
 
 class HeaderPreview extends StatelessWidget {
@@ -23,7 +24,7 @@ class HeaderPreview extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.cardWhite,
             radius: 24,
             child: const Icon(Icons.confirmation_number, color: Colors.black87),
           ),
@@ -32,9 +33,9 @@ class HeaderPreview extends StatelessWidget {
             child: Text(
               name,
               style: const TextStyle(
-                color: Colors.white,
+                color: AppColors.cardWhite,
                 fontSize: 18,
-                fontWeight: FontWeight.w700,
+                fontFamily: 'MontserratBold',
               ),
               overflow: TextOverflow.ellipsis,
             ),

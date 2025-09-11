@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tickets_ingresos/src/config/sample_config.dart';
+import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationBloc.dart';
+import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationEvent.dart';
+import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationState.dart';
+import 'package:tickets_ingresos/src/presentation/utils/blocFormItem.dart';
+import 'package:tickets_ingresos/src/presentation/widget/Button/AppButton.dart';
 import 'package:tickets_ingresos/src/presentation/widget/CustomAppBar.dart';
-import 'package:tickets_ingresos/src/presentation/widget/Switch/disableSwitch.dart';
-import 'package:tickets_ingresos/src/presentation/widget/TextField/ColorField.dart';
-import 'package:tickets_ingresos/src/presentation/widget/TextField/ModernField.dart';
+import 'package:tickets_ingresos/src/presentation/widget/Switch/ToggleSwitch.dart';
+import 'package:tickets_ingresos/src/presentation/widget/TextField/TextFormField.dart';
 import 'package:tickets_ingresos/src/presentation/widget/headers/HeaderPreview.dart';
-import 'package:tickets_ingresos/src/presentation/widget/title/sectionTitle.dart';
+import 'package:tickets_ingresos/src/presentation/widget/Title/sectionTitle.dart';
 
-class ConfigurationContent extends StatefulWidget {
-  const ConfigurationContent({super.key});
+// ignore: must_be_immutable
+class ConfigurationContent extends StatelessWidget {
+  ConfigurationState? state;
 
-  @override
-  State<ConfigurationContent> createState() => _ConfigurationContentState();
-}
+  var beepScan = false;
 
-class _ConfigurationContentState extends State<ConfigurationContent> {
-  final nameAppController = TextEditingController();
-  final nameEmpresaController = TextEditingController();
-  final apiController = TextEditingController();
-  final logoController = TextEditingController();
+  ConfigurationContent(this.state, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,77 +27,105 @@ class _ConfigurationContentState extends State<ConfigurationContent> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              HeaderPreview(
-                name: AppConfig.sampleConfig.displayName,
-                primaryHex: AppConfig.sampleConfig.primary,
-                accentHex: AppConfig.sampleConfig.accent,
-              ),
-              const SizedBox(height: 16),
-              const SectionTitle('Organización'),
-              ModernField(hint: 'App', controller: nameAppController),
-              ModernField(
-                controller: nameEmpresaController,
-                hint: 'Nombre visible de la App',
-              ),
+          child: Form(
+            key: state!.formkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                HeaderPreview(
+                  name: AppConfig.sampleConfig.displayName,
+                  primaryHex: AppConfig.sampleConfig.primary,
+                  accentHex: AppConfig.sampleConfig.accent,
+                ),
 
-              const SizedBox(height: 12),
-              const SectionTitle('COLORES'),
-              Row(
-                children: [
-                  Expanded(
-                    child: ColorField(
-                      label: 'Primary (#RRGGBB)',
-                      initial: AppConfig.sampleConfig.primary,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ColorField(
-                      label: 'Accent (#RRGGBB)',
-                      initial: AppConfig.sampleConfig.accent,
-                    ),
-                  ),
-                ],
-              ),
+                const SizedBox(height: 16),
+                const SectionTitle('Organización'),
+                DefaultTextField(
+                  onChanged:
+                      (text) => {
+                        context.read<ConfigurationBloc>().add(
+                          NameChanged(name: BlocFormItem(value: text)),
+                        ),
+                      },
+                  text: 'Nombre de la app',
+                  icon: Icons.apps_outlined,
+                  validate: (value) {
+                    return context.read<ConfigurationBloc>().state.name.error;
+                  },
+                ),
 
-              const SizedBox(height: 12),
-              const SectionTitle('API'),
-              ModernField(
-                controller: apiController,
-                hint: 'https://api.App.com',
-                keyboard: TextInputType.url,
-              ),
+                const SizedBox(height: 12),
+                const SectionTitle('Api'),
+                DefaultTextField(
+                  onChanged:
+                      (text) => {
+                        context.read<ConfigurationBloc>().add(
+                          ApiNameChanged(apiName: BlocFormItem(value: text)),
+                        ),
+                      },
+                  text: 'https://api.App.com',
+                  icon: Icons.link_outlined,
+                  validate: (value) {
+                    return context
+                        .read<ConfigurationBloc>()
+                        .state
+                        .apiName
+                        .error;
+                  },
+                ),
 
-              const SizedBox(height: 12),
-              const SectionTitle('FEATURES'),
-              // Switches deshabilitados para mantener "sin lógica"
-              DisabledSwitch(
-                title: 'Beep on Scan',
-                value: AppConfig.sampleConfig.beepOnScan,
-                subtitle: 'Reproducir sonido al validar',
-              ),
+                const SizedBox(height: 12),
+                const SectionTitle('Sonido'),
+                ToggleSwitch(
+                  title: "Modo Beep on Scan",
+                  subtitle: "Activa o desactiva",
+                  initialValue: beepScan,
+                  onChanged: (val) {
+                    beepScan=val;
+                  },
+                ),
 
-              const SizedBox(height: 12),
-              const SectionTitle('ASSETS'),
-              ModernField(
-                controller: logoController,
-                hint: 'assets/App/logo.png',
-              ),
+                const SizedBox(height: 12),
+                const SectionTitle('Logo'),
+                DefaultTextField(
+                  onChanged:
+                      (text) => {
+                        context.read<ConfigurationBloc>().add(
+                          LogoChanged(logo: BlocFormItem(value: text)),
+                        ),
+                      },
+                  text: 'link del logo',
+                  icon: Icons.image_outlined,
+                  validate: (value) {
+                    return context.read<ConfigurationBloc>().state.logo.error;
+                  },
+                ),
 
-              const SizedBox(height: 24),
-              FilledButton.icon(
-                onPressed: null,
-                icon: const Icon(Icons.save),
-                label: const Text('Guardar (UI Only)'),
-              ),
-            ],
+                const SizedBox(height: 24),
+                AppButton(
+                  label: "Guardar",
+                  icon: Icons.save,
+                  type: AppButtonType.primary,
+                  onPressed:
+                      () => {
+                        if (state!.formkey!.currentState!.validate())
+                          {
+                            print("mario fernando##########################################"),
+                            print("El formulario es valido"),
+                            print("mario fernando##########################################"),
+                            context.read<ConfigurationBloc>().add(FormSubmit()),
+                          }else{
+                            print( "mario fernando##########################################"),
+                            print("El formulario no es valido"),
+                            print("mario fernando##########################################"),
+                          },
+                      },
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
-

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tickets_ingresos/blocProviders.dart';
 import 'package:tickets_ingresos/src/config/app_routes.dart';
 
 void main() async {
@@ -11,14 +13,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'TICKETS INGRESOS',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
+    return MultiBlocProvider(
+      providers: blocProviders,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'TICKETS INGRESOS',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
+        ),
+        initialRoute: AppRoutes.configurations,
+        routes: AppRoutes.routes,
       ),
-      initialRoute: AppRoutes.configurations,
-      routes: AppRoutes.routes,
     );
   }
 }
