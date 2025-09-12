@@ -17,6 +17,12 @@ class ApiNameChanged extends ConfigurationEvent{
   ApiNameChanged({required this.apiName});
 }
 
+class BeepScanChanged extends ConfigurationEvent{
+
+  final BlocFormItem beeps;
+  BeepScanChanged({required this.beeps});
+}
+
 class LogoChanged extends ConfigurationEvent{
 
   final BlocFormItem logo;

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationEvent.dart';
 import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationState.dart';
 import 'package:tickets_ingresos/src/presentation/utils/blocFormItem.dart';
+import 'package:tickets_ingresos/src/presentation/utils/validators/url_validator.dart';
 
 class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
   
@@ -26,12 +26,15 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
       );
     });
 
-    on<ApiNameChanged>((event, emit) {
+      on<ApiNameChanged>((event, emit) {
+      final value = event.apiName.value.trim();
+      final error = UrlValidator.validateApiUrl(value); // Usamos el validador
+
       emit(
         state.copyWith(
           apiName: BlocFormItem(
-            value: event.apiName.value,
-            error: event.apiName.value.isEmpty ? 'EL campo api es obligatorio' : null,
+            value: value,
+            error: error, // Ahora el error viene del validador centralizado
           ),
           formkey: formKey,
         ),
