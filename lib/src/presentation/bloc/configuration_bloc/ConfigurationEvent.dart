@@ -1,5 +1,6 @@
 
 import 'package:tickets_ingresos/src/presentation/utils/blocFormItem.dart';
+import 'package:tickets_ingresos/src/presentation/utils/blocFormItemBooleano.dart';
 
 abstract class ConfigurationEvent {}
 
@@ -29,4 +30,10 @@ class LogoChanged extends ConfigurationEvent{
   LogoChanged({required this.logo});
 }
 
-class FormSubmit extends ConfigurationEvent{}
+class FormSubmit extends ConfigurationEvent{
+    
+    final BlocFormItemBoleano beeScaner;
+
+      FormSubmit({required this.beeScaner});     
+
+}

@@ -58,6 +58,7 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
        print(state.name.value);
        print(state.apiName.value);
        print(state.logo.value);
+       print(state.beedScanear.value);
     });
   }
 }

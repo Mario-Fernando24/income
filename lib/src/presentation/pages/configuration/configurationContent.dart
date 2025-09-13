@@ -5,6 +5,7 @@ import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/Config
 import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationEvent.dart';
 import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationState.dart';
 import 'package:tickets_ingresos/src/presentation/utils/blocFormItem.dart';
+import 'package:tickets_ingresos/src/presentation/utils/blocFormItemBooleano.dart';
 import 'package:tickets_ingresos/src/presentation/widget/Button/AppButton.dart';
 import 'package:tickets_ingresos/src/presentation/widget/CustomAppBar.dart';
 import 'package:tickets_ingresos/src/presentation/widget/Switch/ToggleSwitch.dart';
@@ -110,10 +111,7 @@ class ConfigurationContent extends StatelessWidget {
                       () => {
                         if (state!.formkey!.currentState!.validate())
                           {
-                            print("mario fernando##########################################"),
-                            print("El formulario es valido"),
-                            print("mario fernando##########################################"),
-                            context.read<ConfigurationBloc>().add(FormSubmit()),
+                            context.read<ConfigurationBloc>().add(FormSubmit(beeScaner: BlocFormItemBoleano(value: beepScan))),
                           }else{
                             print( "mario fernando##########################################"),
                             print("El formulario no es valido"),
