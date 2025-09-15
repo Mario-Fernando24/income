@@ -1,39 +1,37 @@
-
 import 'package:tickets_ingresos/src/presentation/utils/blocFormItem.dart';
-import 'package:tickets_ingresos/src/presentation/utils/blocFormItemBooleano.dart';
 
 abstract class ConfigurationEvent {}
 
-class ConfigurationInitEvent extends ConfigurationEvent{}
+class ConfigurationInitEvent extends ConfigurationEvent {}
 
-class NameChanged extends ConfigurationEvent{
-
+class NameChanged extends ConfigurationEvent {
   final BlocFormItem name;
   NameChanged({required this.name});
 }
 
-class ApiNameChanged extends ConfigurationEvent{
-
+class ApiNameChanged extends ConfigurationEvent {
   final BlocFormItem apiName;
   ApiNameChanged({required this.apiName});
 }
 
-class BeepScanChanged extends ConfigurationEvent{
-
-  final BlocFormItem beeps;
-  BeepScanChanged({required this.beeps});
+class BeedScanearChanged extends ConfigurationEvent {
+  final BlocFormItem<bool> beedScanear;
+  BeedScanearChanged({required this.beedScanear});
 }
 
-class LogoChanged extends ConfigurationEvent{
-
+class LogoChanged extends ConfigurationEvent {
   final BlocFormItem logo;
   LogoChanged({required this.logo});
 }
 
-class FormSubmit extends ConfigurationEvent{
-    
-    final BlocFormItemBoleano beeScaner;
-
-      FormSubmit({required this.beeScaner});     
-
+class ColorPrimaryChanged extends ConfigurationEvent {
+  final BlocFormItem colorPrimary;
+  ColorPrimaryChanged({required this.colorPrimary});
 }
+
+class ColorSecundaryChanged extends ConfigurationEvent {
+  final BlocFormItem colorSecundary;
+  ColorSecundaryChanged({required this.colorSecundary});
+}
+
+class FormSubmit extends ConfigurationEvent {}

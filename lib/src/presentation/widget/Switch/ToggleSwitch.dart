@@ -25,38 +25,51 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   @override
   void initState() {
     super.initState();
-    _value = widget.initialValue; 
+    _value = widget.initialValue;
   }
 
   @override
   Widget build(BuildContext context) {
-    return SwitchListTile.adaptive(
-      value: _value,
-      onChanged: (val) {
-        setState(() {
-          _value = val;
-        });
-        widget.onChanged?.call(val); // 👉 devuelve el valor al padre
-      },
-      title: Text(
-        widget.title,
-        style: const TextStyle(
-          color: AppColors.textSecondary,
-          fontSize: 14,
-          fontFamily: 'MontserratLight',
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.title,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                    fontFamily: 'MontserratLight',
+                  ),
+                ),
+                if (widget.subtitle != null)
+                  Text(
+                    widget.subtitle!,
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 14,
+                      fontFamily: 'MontserratMedium',
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          Switch.adaptive(
+            value: _value,
+            onChanged: (val) {
+              setState(() {
+                _value = val;
+              });
+              widget.onChanged?.call(val);
+            },
+          ),
+        ],
       ),
-      subtitle: widget.subtitle != null
-          ? Text(
-              widget.subtitle!,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 14,
-                fontFamily: 'MontserratMedium',
-              ),
-            )
-          : null,
-      contentPadding: EdgeInsets.zero,
     );
   }
 }

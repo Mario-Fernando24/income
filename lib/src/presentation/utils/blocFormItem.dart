@@ -1,24 +1,19 @@
-class BlocFormItem {
-
-  final String value;
+class BlocFormItem<T> {
+  final T value;
   final String? error;
 
   const BlocFormItem({
-    this.value='',
-    this.error
+    required this.value,
+    this.error,
   });
 
-    BlocFormItem copyWith({
-     String? value,
-     String? error,
-  }){
-     return BlocFormItem(
+  BlocFormItem<T> copyWith({
+    T? value,
+    String? error,
+  }) {
+    return BlocFormItem<T>(
       value: value ?? this.value,
-      error: error ?? this.error
-     );
+      error: error ?? this.error,
+    );
   }
-
-
-
-
 }

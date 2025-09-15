@@ -10,6 +10,7 @@ import 'package:tickets_ingresos/src/presentation/widget/Button/AppButton.dart';
 import 'package:tickets_ingresos/src/presentation/widget/CustomAppBar.dart';
 import 'package:tickets_ingresos/src/presentation/widget/Switch/ToggleSwitch.dart';
 import 'package:tickets_ingresos/src/presentation/widget/TextField/TextFormField.dart';
+import 'package:tickets_ingresos/src/presentation/widget/colores/ColorPickerField.dart';
 import 'package:tickets_ingresos/src/presentation/widget/headers/HeaderPreview.dart';
 import 'package:tickets_ingresos/src/presentation/widget/Title/sectionTitle.dart';
 
@@ -17,7 +18,7 @@ import 'package:tickets_ingresos/src/presentation/widget/Title/sectionTitle.dart
 class ConfigurationContent extends StatelessWidget {
   ConfigurationState? state;
 
-  var beepScan = false;
+  bool beepScan = false;
 
   ConfigurationContent(this.state, {super.key});
 
@@ -86,6 +87,38 @@ class ConfigurationContent extends StatelessWidget {
                   },
                 ),
 
+                // --- NUEVO: Colores ---
+                const SizedBox(height: 12),
+                const SectionTitle('Colores'),
+                ColorPickerField(
+                  label: 'Color primario',
+                  // Si ya manejas esto en el Bloc/State, puedes leerlo de allí.
+                  initialHex: AppConfig.sampleConfig.primary, // ej. "#1976D2"
+                  onColorPicked: (hex) {
+                    print("PRIMARYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                    print(hex);
+                    print("PRIMARYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                        context.read<ConfigurationBloc>().add(
+                        ColorPrimaryChanged(colorPrimary:  BlocFormItem<String>(value: hex))
+                        );
+                  },
+                ),
+
+                const SizedBox(height: 12),
+                ColorPickerField(
+                  label: 'Color secundario',
+                  initialHex: AppConfig.sampleConfig.accent, // ej. "#FFC107"
+                  onColorPicked: (hex) {
+                    print("SECUNDARYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                    print(hex);
+                    print("SECUNDARYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                    context.read<ConfigurationBloc>().add(
+                        ColorSecundaryChanged(colorSecundary:  BlocFormItem<String>(value: hex))
+                        );
+                  },
+                ),
+
+
                 const SizedBox(height: 12),
                 const SectionTitle('Logo'),
                 DefaultTextField(
@@ -111,7 +144,10 @@ class ConfigurationContent extends StatelessWidget {
                       () => {
                         if (state!.formkey!.currentState!.validate())
                           {
-                            context.read<ConfigurationBloc>().add(FormSubmit(beeScaner: BlocFormItemBoleano(value: beepScan))),
+                           context.read<ConfigurationBloc>().add(
+                              BeedScanearChanged(beedScanear: BlocFormItem<bool>(value: beepScan)),
+                            ),
+                            context.read<ConfigurationBloc>().add(FormSubmit()),
                           }else{
                             print( "mario fernando##########################################"),
                             print("El formulario no es valido"),

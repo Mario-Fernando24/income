@@ -41,6 +41,18 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
       );
     });
 
+    on<BeedScanearChanged>((event, emit) {
+        emit(
+          state.copyWith(
+            beedScanear: BlocFormItem(
+              value: event.beedScanear.value,
+              error: null,
+            ),
+            formkey: formKey,
+          ),
+        );
+      });
+
       on<LogoChanged>((event, emit) {
       emit(
         state.copyWith(
@@ -53,12 +65,38 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
       );
     });
 
+    on<ColorPrimaryChanged>((event, emit) {
+      emit(
+        state.copyWith(
+          logo: BlocFormItem(
+            value: event.colorPrimary.value,
+            error: event.colorPrimary.value.isEmpty ? 'El campo logo es obligatorio' : null,
+          ),
+          formkey: formKey,
+        ),
+      );
+    });
+
+       on<ColorSecundaryChanged>((event, emit) {
+      emit(
+        state.copyWith(
+          logo: BlocFormItem(
+            value: event.colorSecundary.value,
+            error: event.colorSecundary.value.isEmpty ? 'El campo logo es obligatorio' : null,
+          ),
+          formkey: formKey,
+        ),
+      );
+    });
+
 
     on<FormSubmit>((event, emit) async {
+      print("*********************************************************************");
        print(state.name.value);
        print(state.apiName.value);
        print(state.logo.value);
        print(state.beedScanear.value);
+       print("*********************************************************************");
     });
   }
 }
