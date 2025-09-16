@@ -3,6 +3,8 @@ import 'package:tickets_ingresos/src/domain/models/request/configurate_request.d
 
 abstract class Configuraterepository {
 
-  Future<dynamic> saveConfigurate(ConfigurateRequest configurate);
+  Future<bool> saveConfigurate(ConfigurateRequest configurate);
+
+  Future<ConfigurateRequest?> getConfigurate();
 
 }

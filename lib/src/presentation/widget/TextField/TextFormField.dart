@@ -10,6 +10,7 @@ class DefaultTextField extends StatelessWidget {
   final bool obscure;
   final double? size;
   final TextEditingController? controller;
+  final String? initialValue;
 
   const DefaultTextField({
     super.key,
@@ -22,6 +23,7 @@ class DefaultTextField extends StatelessWidget {
     this.obscure = false,
     this.size = 14,
     this.controller,
+    this.initialValue,
   });
 
   @override
@@ -30,6 +32,8 @@ class DefaultTextField extends StatelessWidget {
       margin: margin,
       child: TextFormField(
         controller: controller,
+        // 👇 Solo usar initialValue si no hay controller
+        initialValue: controller == null ? initialValue : null,
         keyboardType: keyboard,
         obscureText: obscure,
         validator: validate,

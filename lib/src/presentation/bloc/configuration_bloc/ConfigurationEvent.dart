@@ -34,4 +34,6 @@ class ColorSecundaryChanged extends ConfigurationEvent {
   ColorSecundaryChanged({required this.colorSecundary});
 }
 
+class LoadConfiguration extends ConfigurationEvent {}
+
 class FormSubmit extends ConfigurationEvent {}

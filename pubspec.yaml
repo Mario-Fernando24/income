@@ -15,13 +15,16 @@ dependencies:
   equatable: ^2.0.7
   audioplayers: ^6.5.1
   shared_preferences: ^2.2.2
+  injectable: ^2.5.1
+  get_it: ^8.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^5.0.0
-
+  injectable_generator: ^2.8.1
+  build_runner: ^2.7.1
 
 flutter:
 

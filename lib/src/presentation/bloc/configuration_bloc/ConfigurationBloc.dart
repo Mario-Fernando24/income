@@ -1,20 +1,51 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tickets_ingresos/src/config/app_theme.dart';
+import 'package:tickets_ingresos/src/domain/models/request/configurate_request.dart';
+import 'package:tickets_ingresos/src/domain/useCases/configurate/ConfigurateCases.dart';
 import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationEvent.dart';
 import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationState.dart';
 import 'package:tickets_ingresos/src/presentation/utils/blocFormItem.dart';
 import 'package:tickets_ingresos/src/presentation/utils/validators/url_validator.dart';
 
 class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
-  
+
+  Configurateusecases configurateusecases;
   final formKey = GlobalKey<FormState>();
 
-  ConfigurationBloc() : super(ConfigurationState()) {
+  ConfigurationBloc(this.configurateusecases) : super(ConfigurationState.initial()) {
     
     on<ConfigurationInitEvent>((event, emit) {
       emit(state.copyWith(formkey: formKey));
     });
+
+    on<LoadConfiguration>((event, emit) async {
+      emit(state.copyWith(status: FormStatus.submitting));
+
+      try {
+        final conf = await configurateusecases.getConfiguracionUseCase.run();
+
+        if (conf != null) {
+          emit(state.copyWith(
+            status: FormStatus.success,
+            name: BlocFormItem(value: conf.name),
+            apiName: BlocFormItem(value: conf.apiName),
+            logo: BlocFormItem(value: conf.logo),
+            beedScanear: BlocFormItem(value: conf.needScan),
+            colorPrimary: BlocFormItem(value: conf.colorPrimary),
+            colorSecundary: BlocFormItem(value: conf.colorSecondary),
+          ));
+        } else {
+          emit(state.copyWith(status: FormStatus.initial));
+        }
+      } catch (e) {
+        emit(state.copyWith(
+          status: FormStatus.failure,
+          errorMessage: e.toString(),
+        ));
+      }
+    });
+
 
     on<NameChanged>((event, emit) {
       emit(
@@ -100,15 +131,42 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
     });
 
 
-    on<FormSubmit>((event, emit) async {
-      print("*****************************mario****************************************");
-       print(state.name.value);
-       print(state.apiName.value);
-       print(state.logo.value);
-       print(state.beedScanear.value);
-       print(state.colorPrimary.value ?? '#${AppColors.primary.value.toRadixString(16).padLeft(8, '0').substring(2)}');
-       print(state.colorSecundary.value ?? '#${AppColors.secondary.value.toRadixString(16).padLeft(8, '0').substring(2)}');
-       print("*********************************************************************");
+      on<FormSubmit>((event, emit) async {
+
+      print("inicioooooo. 00000");
+
+      emit(state.copyWith(status: FormStatus.submitting));
+
+      print("inicioooooo. 1111");
+
+      final confRequest = ConfigurateRequest(
+        name: state.name.value,
+        apiName: state.apiName.value,
+        logo: state.logo.value,
+        needScan: state.beedScanear.value,
+        colorPrimary: state.colorPrimary.value ??
+            '#${AppColors.primary.value.toRadixString(16).padLeft(8, '0').substring(2)}',
+        colorSecondary: state.colorSecundary.value ??
+            '#${AppColors.secondary.value.toRadixString(16).padLeft(8, '0').substring(2)}',
+      );
+
+      try {
+        bool resp = await configurateusecases.configuracionUseCase.run(confRequest);
+        print("inicioooooo. 2222");
+
+        if (resp) {
+          emit(state.copyWith(status: FormStatus.success));
+
+
+         print("inicioooooo. 33333 MAR $resp");
+
+        } else {
+          emit(state.copyWith(status: FormStatus.failure, errorMessage: "Error al guardar la configuración"));
+        }
+      } catch (e) {
+        emit(state.copyWith(status: FormStatus.failure, errorMessage: e.toString()));
+      }
     });
+
   }
 }

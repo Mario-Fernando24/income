@@ -1,8 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tickets_ingresos/injection.dart';
+import 'package:tickets_ingresos/src/domain/useCases/configurate/ConfigurateCases.dart';
 import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationBloc.dart';
+import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationEvent.dart';
 
 List<BlocProvider> blocProviders = [
    
-   BlocProvider<ConfigurationBloc>(create: (context) => ConfigurationBloc()),
+   BlocProvider<ConfigurationBloc>(create: (context) => ConfigurationBloc(locator<Configurateusecases>())..add(ConfigurationInitEvent())),
 
 ];
