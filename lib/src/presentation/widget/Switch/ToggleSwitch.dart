@@ -5,7 +5,7 @@ class ToggleSwitch extends StatefulWidget {
   final String title;
   final String? subtitle;
   final bool initialValue;
-  final ValueChanged<bool>? onChanged; // 👉 Callback opcional
+  final ValueChanged<bool>? onChanged;
 
   const ToggleSwitch({
     super.key,
@@ -26,6 +26,16 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   void initState() {
     super.initState();
     _value = widget.initialValue;
+  }
+
+  @override
+  void didUpdateWidget(covariant ToggleSwitch oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialValue != widget.initialValue) {
+      setState(() {
+        _value = widget.initialValue;
+      });
+    }
   }
 
   @override

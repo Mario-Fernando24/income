@@ -27,7 +27,7 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
 
         if (conf != null) {
           emit(state.copyWith(
-            status: FormStatus.success,
+            status: FormStatus.initial,
             name: BlocFormItem(value: conf.name),
             apiName: BlocFormItem(value: conf.apiName),
             logo: BlocFormItem(value: conf.logo),
@@ -132,12 +132,9 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
 
 
       on<FormSubmit>((event, emit) async {
-
-      print("inicioooooo. 00000");
-
       emit(state.copyWith(status: FormStatus.submitting));
 
-      print("inicioooooo. 1111");
+  await Future.delayed(const Duration(milliseconds: 900));
 
       final confRequest = ConfigurateRequest(
         name: state.name.value,

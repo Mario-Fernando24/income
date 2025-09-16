@@ -35,5 +35,6 @@ class ColorSecundaryChanged extends ConfigurationEvent {
 }
 
 class LoadConfiguration extends ConfigurationEvent {}
+class ResetStatus extends ConfigurationEvent {}
 
 class FormSubmit extends ConfigurationEvent {}
