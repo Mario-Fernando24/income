@@ -43,6 +43,6 @@ class ConfigurationState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [name, apiName, logo, beedScanear];
+  List<Object?> get props => [name, apiName, logo, beedScanear, colorPrimary, colorSecundary];
 }
 // ...existing code...

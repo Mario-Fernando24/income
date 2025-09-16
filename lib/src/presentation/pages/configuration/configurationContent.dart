@@ -5,7 +5,6 @@ import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/Config
 import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationEvent.dart';
 import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationState.dart';
 import 'package:tickets_ingresos/src/presentation/utils/blocFormItem.dart';
-import 'package:tickets_ingresos/src/presentation/utils/blocFormItemBooleano.dart';
 import 'package:tickets_ingresos/src/presentation/widget/Button/AppButton.dart';
 import 'package:tickets_ingresos/src/presentation/widget/CustomAppBar.dart';
 import 'package:tickets_ingresos/src/presentation/widget/Switch/ToggleSwitch.dart';
@@ -17,8 +16,6 @@ import 'package:tickets_ingresos/src/presentation/widget/Title/sectionTitle.dart
 // ignore: must_be_immutable
 class ConfigurationContent extends StatelessWidget {
   ConfigurationState? state;
-
-  bool beepScan = false;
 
   ConfigurationContent(this.state, {super.key});
 
@@ -81,9 +78,12 @@ class ConfigurationContent extends StatelessWidget {
                 ToggleSwitch(
                   title: "Modo Beep on Scan",
                   subtitle: "Activa o desactiva",
-                  initialValue: beepScan,
+                  initialValue: state!.beedScanear.value,
                   onChanged: (val) {
-                    beepScan=val;
+                  
+                    context.read<ConfigurationBloc>().add(
+                              BeedScanearChanged(beedScanear: BlocFormItem<bool>(value: val)),
+                            );
                   },
                 ),
 
@@ -92,29 +92,31 @@ class ConfigurationContent extends StatelessWidget {
                 const SectionTitle('Colores'),
                 ColorPickerField(
                   label: 'Color primario',
-                  // Si ya manejas esto en el Bloc/State, puedes leerlo de allí.
-                  initialHex: AppConfig.sampleConfig.primary, // ej. "#1976D2"
+                  initialHex: state?.colorPrimary.value ?? AppConfig.sampleConfig.primary,
                   onColorPicked: (hex) {
                     print("PRIMARYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
                     print(hex);
                     print("PRIMARYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-                        context.read<ConfigurationBloc>().add(
-                        ColorPrimaryChanged(colorPrimary:  BlocFormItem<String>(value: hex))
-                        );
+                    context.read<ConfigurationBloc>().add(
+                      ColorPrimaryChanged(colorPrimary: BlocFormItem<String>(value: hex.toString()))
+
+                     
+                      
+                    );
                   },
                 ),
 
                 const SizedBox(height: 12),
                 ColorPickerField(
                   label: 'Color secundario',
-                  initialHex: AppConfig.sampleConfig.accent, // ej. "#FFC107"
+                  initialHex: state?.colorSecundary.value ?? AppConfig.sampleConfig.accent,
                   onColorPicked: (hex) {
                     print("SECUNDARYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
                     print(hex);
                     print("SECUNDARYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-                    context.read<ConfigurationBloc>().add(
-                        ColorSecundaryChanged(colorSecundary:  BlocFormItem<String>(value: hex))
-                        );
+                     context.read<ConfigurationBloc>().add(
+                      ColorSecundaryChanged(colorSecundary: BlocFormItem<String>(value: hex))
+                    );
                   },
                 ),
 
@@ -144,9 +146,7 @@ class ConfigurationContent extends StatelessWidget {
                       () => {
                         if (state!.formkey!.currentState!.validate())
                           {
-                           context.read<ConfigurationBloc>().add(
-                              BeedScanearChanged(beedScanear: BlocFormItem<bool>(value: beepScan)),
-                            ),
+                           
                             context.read<ConfigurationBloc>().add(FormSubmit()),
                           }else{
                             print( "mario fernando##########################################"),

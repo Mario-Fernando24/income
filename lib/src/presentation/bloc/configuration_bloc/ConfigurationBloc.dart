@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tickets_ingresos/src/config/app_theme.dart';
 import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationEvent.dart';
 import 'package:tickets_ingresos/src/presentation/bloc/configuration_bloc/ConfigurationState.dart';
 import 'package:tickets_ingresos/src/presentation/utils/blocFormItem.dart';
@@ -10,6 +11,7 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
   final formKey = GlobalKey<FormState>();
 
   ConfigurationBloc() : super(ConfigurationState()) {
+    
     on<ConfigurationInitEvent>((event, emit) {
       emit(state.copyWith(formkey: formKey));
     });
@@ -42,6 +44,8 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
     });
 
     on<BeedScanearChanged>((event, emit) {
+        print("newwwwwwwwwwwwwwwwwwwwwww");
+      print(event.beedScanear.value);
         emit(
           state.copyWith(
             beedScanear: BlocFormItem(
@@ -66,23 +70,29 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
     });
 
     on<ColorPrimaryChanged>((event, emit) {
+
+      print("llegoooooooooooooooooooooooooooooo");
+      print(event.colorPrimary.value);
       emit(
         state.copyWith(
-          logo: BlocFormItem(
+          colorPrimary: BlocFormItem(
             value: event.colorPrimary.value,
-            error: event.colorPrimary.value.isEmpty ? 'El campo logo es obligatorio' : null,
+            error: "",
           ),
           formkey: formKey,
         ),
       );
     });
 
-       on<ColorSecundaryChanged>((event, emit) {
+    on<ColorSecundaryChanged>((event, emit) {
+
+      print("secundariooooooooooooo");
+      print(event.colorSecundary.value);
       emit(
         state.copyWith(
-          logo: BlocFormItem(
+          colorSecundary: BlocFormItem(
             value: event.colorSecundary.value,
-            error: event.colorSecundary.value.isEmpty ? 'El campo logo es obligatorio' : null,
+            error: "",
           ),
           formkey: formKey,
         ),
@@ -91,11 +101,13 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
 
 
     on<FormSubmit>((event, emit) async {
-      print("*********************************************************************");
+      print("*****************************mario****************************************");
        print(state.name.value);
        print(state.apiName.value);
        print(state.logo.value);
        print(state.beedScanear.value);
+       print(state.colorPrimary.value ?? '#${AppColors.primary.value.toRadixString(16).padLeft(8, '0').substring(2)}');
+       print(state.colorSecundary.value ?? '#${AppColors.secondary.value.toRadixString(16).padLeft(8, '0').substring(2)}');
        print("*********************************************************************");
     });
   }
