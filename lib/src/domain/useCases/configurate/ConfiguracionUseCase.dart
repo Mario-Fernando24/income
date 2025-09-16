@@ -1,13 +1,15 @@
 
-import 'package:tickets_ingresos/src/domain/useCases/configurate/ConfigurateCases.dart';
+import 'package:tickets_ingresos/src/domain/models/request/configurate_request.dart';
+import 'package:tickets_ingresos/src/domain/repository/ConfigurateRepository.dart';
 
 class ConfiguracionUseCase {
 
-   Configurateusecases configurateusecases;
+   Configuraterepository configuraterepository;
 
-   ConfiguracionUseCase(this.configurateusecases);
+   ConfiguracionUseCase(this.configuraterepository);
 
-   run(String email, String password){
-    // return configurateusecases.login(email, password);
+   run(ConfigurateRequest config){
+     return configuraterepository.saveConfigurate(config);
    }
+   
 }
