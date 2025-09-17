@@ -25,7 +25,6 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
             return Stack(
               children: [
                 ConfigurationContent(state)
-                // Center(child: CircularProgressIndicator())
               ],
             );
           },

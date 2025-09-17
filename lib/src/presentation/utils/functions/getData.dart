@@ -1,33 +1,27 @@
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+ import 'dart:convert';
+import 'dart:ui';
+
+import 'package:tickets_ingresos/src/config/app_theme.dart';
 import 'package:tickets_ingresos/src/data/datasource/local/SharefPref.dart';
 import 'package:tickets_ingresos/src/domain/models/request/configurate_request.dart';
 import 'package:tickets_ingresos/src/presentation/utils/const/PreferenceKeys.dart';
 
-class Configurateservices {
 
-  Future<bool> saveConfigurate(ConfigurateRequest config) async {
-    final prefs = SharefPref();
-
-    final jsonConfig = jsonEncode({
-      "name": config.name,
-      "apiName": config.apiName,
-      "logo": config.logo,
-      "needScan": config.needScan,
-      "colorPrimary": config.colorPrimary,
-      "colorSecondary": config.colorSecondary,
-    });
-    await prefs.save(PreferenceKeys.appConfiguration, jsonConfig);
-    
-    return true;
-    
-  }
-
-  Future<ConfigurateRequest?> getConfigurate() async {
+class DataApp {
+  Future<ConfigurateRequest?> getConfiguratePreference() async {
     final prefs = SharefPref();
     final jsonString = await prefs.read(PreferenceKeys.appConfiguration);
 
-    if (jsonString == null) return null;
+    if (jsonString == null) {
+      return ConfigurateRequest(
+      name: "NOMBRE APP",
+      apiName: "",
+      logo: "",
+      needScan: false,
+      colorPrimary: AppColors.primary.value.toRadixString(16).padLeft(8, '0').substring(2),
+      colorSecondary: const Color.fromARGB(255, 236, 233, 229).value.toRadixString(16).padLeft(8, '0').substring(2),
+    );
+    }
 
     final Map<String, dynamic> jsonData = jsonDecode(jsonString);
 
@@ -40,10 +34,4 @@ class Configurateservices {
       colorSecondary: jsonData["colorSecondary"],
     );
   }
-
-
 }
-
-
-
-

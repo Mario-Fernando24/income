@@ -75,8 +75,6 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
     });
 
     on<BeedScanearChanged>((event, emit) {
-        print("newwwwwwwwwwwwwwwwwwwwwww");
-      print(event.beedScanear.value);
         emit(
           state.copyWith(
             beedScanear: BlocFormItem(
@@ -101,9 +99,6 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
     });
 
     on<ColorPrimaryChanged>((event, emit) {
-
-      print("llegoooooooooooooooooooooooooooooo");
-      print(event.colorPrimary.value);
       emit(
         state.copyWith(
           colorPrimary: BlocFormItem(
@@ -117,8 +112,6 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
 
     on<ColorSecundaryChanged>((event, emit) {
 
-      print("secundariooooooooooooo");
-      print(event.colorSecundary.value);
       emit(
         state.copyWith(
           colorSecundary: BlocFormItem(
@@ -134,7 +127,7 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
       on<FormSubmit>((event, emit) async {
       emit(state.copyWith(status: FormStatus.submitting));
 
-  await Future.delayed(const Duration(milliseconds: 900));
+       await Future.delayed(const Duration(milliseconds: 2000));
 
       final confRequest = ConfigurateRequest(
         name: state.name.value,
@@ -149,14 +142,9 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
 
       try {
         bool resp = await configurateusecases.configuracionUseCase.run(confRequest);
-        print("inicioooooo. 2222");
 
         if (resp) {
           emit(state.copyWith(status: FormStatus.success));
-
-
-         print("inicioooooo. 33333 MAR $resp");
-
         } else {
           emit(state.copyWith(status: FormStatus.failure, errorMessage: "Error al guardar la configuración"));
         }

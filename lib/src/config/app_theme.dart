@@ -10,6 +10,7 @@ class AppColors  {
   static const Color textPrimary = Colors.black87;
   static const Color textSecondary = Colors.black54;
   static const Color textLightWhite = Colors.white;
+  static const Color textLightGrey = Colors.grey;
 
   // Fondo
   static const Color background = Color(0xFFF5F5F5); // Gris claro

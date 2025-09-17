@@ -17,6 +17,7 @@ dependencies:
   shared_preferences: ^2.2.2
   injectable: ^2.5.1
   get_it: ^8.2.0
+  mobile_scanner: ^7.0.1
 
 dev_dependencies:
   flutter_test:
@@ -32,6 +33,7 @@ flutter:
 
   assets:
     - assets/sounds/
+    - assets/img/
 
   fonts:
     - family: MontserratBlack
