@@ -7,8 +7,8 @@ class ScanearIngresoUseCase {
 
    ScanearIngresoUseCase(this.ingresoRepository);
 
-   Future<bool> run(String scanear){
-     return ingresoRepository.ingreso(scanear);
+   Future<bool> run(String qr){
+     return ingresoRepository.ingresoEvento(qr);
    }
 
 }

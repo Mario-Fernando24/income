@@ -1,6 +1,6 @@
 abstract class IngresoRepository {
 
-  Future<bool> ingreso(String scanear);
+  Future<bool> ingresoEvento(String scanear);
 
 
 }

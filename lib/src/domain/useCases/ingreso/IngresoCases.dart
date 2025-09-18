@@ -1,14 +1,12 @@
 // agregar todos los use cases de auth
-
-import 'package:tickets_ingresos/src/domain/useCases/configurate/ConfiguracionUseCase.dart';
-import 'package:tickets_ingresos/src/domain/useCases/configurate/GetConfiguracionUseCase.dart';
+import 'package:tickets_ingresos/src/domain/useCases/ingreso/ScanearIngresoCase.dart';
 
 class Ingresousecases {
    
-  final ConfiguracionUseCase configuracionUseCase;
+  final ScanearIngresoUseCase scanearIngresoUseCase;
 
    Ingresousecases({
-    required this.configuracionUseCase,
+    required this.scanearIngresoUseCase,
    });
 
 }
