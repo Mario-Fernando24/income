@@ -3,8 +3,10 @@ import 'package:tickets_ingresos/src/config/app_routes.dart';
 import 'package:tickets_ingresos/src/config/app_theme.dart';
 import 'package:tickets_ingresos/src/domain/models/request/configurate_request.dart';
 import 'package:tickets_ingresos/src/presentation/utils/functions/getData.dart';
+import 'package:tickets_ingresos/src/presentation/widget/Button/CustomBottomSheet.dart';
 import 'package:tickets_ingresos/src/presentation/widget/Button/DefaultButton.dart';
 import 'package:tickets_ingresos/src/presentation/widget/TextField/DefaultText.dart';
+import 'package:tickets_ingresos/src/presentation/widget/LoadingScreen.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -14,26 +16,41 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-
-    final dataApp = DataApp(); // Instanciamos la clase
+  final dataApp = DataApp();
   ConfigurateRequest? config;
+  bool isLoading = true;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     loanding();
   }
 
-  void loanding()async{
-     config = await dataApp.getConfiguratePreference();
-     setState(() {
-       
-     });
+  void loanding() async {
+    config = await dataApp.getConfiguratePreference();
+    setState(() {
+      isLoading = false; 
+    });
+  }
+
+  void showCustomBottomSheet(BuildContext context, String message) {
+  showModalBottomSheet(
+    isDismissible: true,
+    enableDrag: true,
+    context: context,
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true,
+    builder: (BuildContext context) {
+      return CustomBottomSheet(message: message);
+    },
+  );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return LoadingScreen();
+    }
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -58,51 +75,44 @@ class _WelcomePageState extends State<WelcomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     DefaultText(
-                      text: '¡Bienvenido a ${config!.name.toString()}!',
+                      text: '¡Bienvenido a ${config?.name ?? "Usuario"}!',
                       textAlign: TextAlign.center,
                       fontSize: 24,
-                      color: AppColors.textPrimary, // O usa config.colorPrimary convertido a Color
+                      color: AppColors.textPrimary,
                     ),
-            
                     const SizedBox(height: 16),
-
-                   const DefaultText(
-                      text: 'Administra tus tickets de manera rápida y sencilla.',
+                    const DefaultText(
+                      text:
+                          'Administra tus tickets de manera rápida y sencilla.',
                       textAlign: TextAlign.center,
                       fontSize: 16,
                       fontFamily: 'MontserratRegular',
-                      color: AppColors.textLightGrey, 
+                      color: AppColors.textLightGrey,
                     ),
-                   
                     const SizedBox(height: 32),
-
-                   DefaultButton(
+                    DefaultButton(
                       label: "Scannear",
                       icon: Icons.qr_code_scanner,
-                      backgroundHex: config!.colorPrimary.toString(), 
-                      textHex:config!.colorSecondary.toString(),       
+                      backgroundHex: config?.colorPrimary ?? "#0ea5e9",
+                      textHex: config?.colorSecondary ?? "#0ea5e9",
                       onPressed: () {
-                        if(config!.apiName.isNotEmpty){
-                            Navigator.pushNamed(context, AppRoutes.ingreso);
-                        }else{
-                          print("debes irte a la configuracion");
+                        if ((config?.apiName ?? "").isNotEmpty) {
+                          Navigator.pushNamed(context, AppRoutes.ingreso);
+                        } else {
+                          showCustomBottomSheet(context, "Primero debes completar la configuración antes de usar el escáner.");
                         }
                       },
                     ),
-
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     DefaultButton(
                       label: "Configuración",
                       icon: Icons.settings,
-                      backgroundHex: config!.colorPrimary.toString(), 
-                      textHex:config!.colorSecondary.toString(),       
+                      backgroundHex: config?.colorPrimary ?? "#0ea5e9",
+                      textHex: config?.colorSecondary ?? "#0ea5e9",
                       onPressed: () {
                         Navigator.pushNamed(context, AppRoutes.configurations);
                       },
                     ),
-                    
-                    
-
                   ],
                 ),
               ),

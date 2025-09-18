@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tickets_ingresos/src/config/app_theme.dart';
@@ -75,6 +76,7 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
     });
 
     on<BeedScanearChanged>((event, emit) {
+       if(event.beedScanear.value) _playSound();
         emit(
           state.copyWith(
             beedScanear: BlocFormItem(
@@ -154,4 +156,11 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
     });
 
   }
+
+    void _playSound() async {
+    final player = AudioPlayer();
+    await player.play(AssetSource("sonid/assets_sonid_sonido.mp3"));
+  }
+
+
 }

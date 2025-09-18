@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tickets_ingresos/src/presentation/pages/configuration/configurationPage.dart';
-import 'package:tickets_ingresos/src/presentation/pages/ingresos/ingresoContent.dart';
+import 'package:tickets_ingresos/src/presentation/pages/ingresos/ingresoPage.dart';
 import 'package:tickets_ingresos/src/presentation/pages/welcome/welcome.dart';
 
 class AppRoutes {
