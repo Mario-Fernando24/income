@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:tickets_ingresos/src/data/datasource/local/SharefPref.dart';
+import 'package:tickets_ingresos/src/presentation/widget/CustomAppBar.dart';
 
 class IngresoContent extends StatefulWidget {
   const IngresoContent({super.key});
@@ -70,9 +71,14 @@ class _IngresoContentState extends State<IngresoContent> {
     if (!scanning) return;                // 👈 ignorar si no estamos escaneando
     if (capture.barcodes.isEmpty) return;
 
-    final b = capture.barcodes.first;
-    final value = b.rawValue ?? b.displayValue ?? '';
+    print("llegoo mario${capture.barcodes.first}");
 
+    final b = capture.barcodes.first;
+        print("llegoo mario${b.rawValue}");
+        print("llegoo mario${b.displayValue }");
+
+    final value = b.rawValue ?? b.displayValue ?? '';
+    // aqui es donde viene la logica del bloc mario fernando munoz rivera
     setState(() {
       lastValue = value;
       scanCount += 1;
@@ -87,6 +93,7 @@ class _IngresoContentState extends State<IngresoContent> {
   }
 
   Future<void> _toggleScan() async {
+
     if (scanning) {
       await _controller.stop();
       setState(() {
@@ -126,16 +133,7 @@ class _IngresoContentState extends State<IngresoContent> {
     final bool showSuccessScreen = !scanning && (lastValue != null);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ticket — Scanner'),
-        actions: [
-          IconButton(
-            onPressed: () => _resetAll(resetCounter: true),
-            icon: const Icon(Icons.restart_alt_rounded),
-            tooltip: 'Reiniciar contador a 0',
-          ),
-        ],
-      ),
+      appBar: const CustomAppBar(title: 'Control de Acceso'),
       body: Stack(
         children: [
           // 👇 SIEMPRE montado: así el controller está adjunto
@@ -215,6 +213,25 @@ class _IngresoContentState extends State<IngresoContent> {
                     ),
                   ),
                   const SizedBox(width: 8),
+                  Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.qr_code_scanner, color: Colors.white, size: 18),
+                            const SizedBox(width: 6),
+                            Text('$scanCount',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: Colors.white, fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
@@ -223,31 +240,18 @@ class _IngresoContentState extends State<IngresoContent> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.qr_code_scanner, color: Colors.white, size: 18),
+                        const Icon(Icons.error, color: Colors.white, size: 18),
                         const SizedBox(width: 6),
                         Text('$scanCount',
                           style: theme.textTheme.titleMedium?.copyWith(
                             color: Colors.white, fontWeight: FontWeight.w600)),
                       ],
                     ),
+                  ),
+                    ],
                   ),
 
-                    Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.qr_code_scanner, color: Colors.white, size: 18),
-                        const SizedBox(width: 6),
-                        Text('$scanCount',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: Colors.white, fontWeight: FontWeight.w600)),
-                      ],
-                    ),
-                  ),
+                 
                 ],
               ),
             ),
