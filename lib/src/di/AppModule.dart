@@ -10,6 +10,7 @@ import 'package:tickets_ingresos/src/domain/useCases/configurate/ConfigurateCase
 import 'package:tickets_ingresos/src/domain/useCases/configurate/GetConfiguracionUseCase.dart';
 import 'package:tickets_ingresos/src/domain/useCases/ingreso/IngresoCases.dart';
 import 'package:tickets_ingresos/src/domain/useCases/ingreso/ScanearIngresoCase.dart';
+//flutter pub run build_runner build --delete-conflicting-outputs
 
 @module
 abstract class AppModule {
@@ -26,7 +27,6 @@ abstract class AppModule {
     getConfiguracionUseCase: GetConfiguracionUseCase(authrepository),
     );
 
-
   // Ingreso (remoto)
   @injectable
   IngresoServices get ingresoServices => IngresoServices();
@@ -40,5 +40,5 @@ abstract class AppModule {
   @injectable
   Ingresousecases get ingresoUseCases => Ingresousecases(
     scanearIngresoUseCase: scanearIngresoUseCase);
-    
+
 }

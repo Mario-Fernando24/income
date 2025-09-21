@@ -13,11 +13,19 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:tickets_ingresos/src/data/datasource/local/configurateService.dart'
     as _i595;
+import 'package:tickets_ingresos/src/data/datasource/remote/ingresoService.dart'
+    as _i716;
 import 'package:tickets_ingresos/src/di/AppModule.dart' as _i474;
 import 'package:tickets_ingresos/src/domain/repository/ConfigurateRepository.dart'
     as _i335;
+import 'package:tickets_ingresos/src/domain/repository/IngresoRepository.dart'
+    as _i495;
 import 'package:tickets_ingresos/src/domain/useCases/configurate/ConfigurateCases.dart'
     as _i136;
+import 'package:tickets_ingresos/src/domain/useCases/ingreso/IngresoCases.dart'
+    as _i262;
+import 'package:tickets_ingresos/src/domain/useCases/ingreso/ScanearIngresoCase.dart'
+    as _i129;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -30,6 +38,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i595.Configurateservices>(() => appModule.conf);
     gh.factory<_i335.Configuraterepository>(() => appModule.authrepository);
     gh.factory<_i136.Configurateusecases>(() => appModule.configurate);
+    gh.factory<_i716.IngresoServices>(() => appModule.ingresoServices);
+    gh.factory<_i495.IngresoRepository>(() => appModule.ingresoRepository);
+    gh.factory<_i129.ScanearIngresoUseCase>(
+      () => appModule.scanearIngresoUseCase,
+    );
+    gh.factory<_i262.Ingresousecases>(() => appModule.ingresoUseCases);
     return this;
   }
 }
