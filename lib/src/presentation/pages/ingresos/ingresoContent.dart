@@ -7,12 +7,13 @@ import 'package:tickets_ingresos/src/data/datasource/local/SharefPref.dart';
 import 'package:tickets_ingresos/src/presentation/bloc/ingreso_bloc/IngresoBloc.dart';
 import 'package:tickets_ingresos/src/presentation/bloc/ingreso_bloc/IngresoEvent.dart';
 import 'package:tickets_ingresos/src/presentation/bloc/ingreso_bloc/IngresoState.dart';
-import 'package:tickets_ingresos/src/presentation/utils/blocFormItem.dart';
 import 'package:tickets_ingresos/src/presentation/widget/CustomAppBar.dart';
 
 class IngresoContent extends StatefulWidget {
-  final IngresoState state;
-  const IngresoContent(this.state, {super.key});
+  final String primary;
+  final String secondary;
+
+  IngresoContent(this.primary, this.secondary, {super.key});
 
   @override
   State<IngresoContent> createState() => _IngresoContentState();
@@ -50,6 +51,8 @@ class _IngresoContentState extends State<IngresoContent> {
   bool torchOn = false;
   String? lastValue;
   int scanCount = 0;
+  String showMessageScanear = '';
+  bool validate = false;
 
   static const Color successTint = Color(0xFF16A34A);
   static const Color neutralTint = Colors.transparent;
@@ -81,17 +84,12 @@ class _IngresoContentState extends State<IngresoContent> {
     if (!scanning) return; // 👈 ignorar si no estamos escaneando
     if (capture.barcodes.isEmpty) return;
 
-    print("llegoo mario${capture.barcodes.first}");
-
     final b = capture.barcodes.first;
 
     final value = b.rawValue ?? b.displayValue ?? '';
     // aqui es donde viene la logica del bloc mario fernando munoz rivera
-    print("sumbaaaaaaa '''''' ${b.rawValue}");
-    print("sumbaaaaaa ********************* ${b.rawValue}");
-    context.read<IngresoBloc>().add(
-      IngresoSubmit(qr: b.rawValue!)
-    );
+
+    context.read<IngresoBloc>().add(IngresoSubmit(qr: b.rawValue!));
 
     setState(() {
       lastValue = value;
@@ -148,61 +146,70 @@ class _IngresoContentState extends State<IngresoContent> {
     return Scaffold(
       appBar: const CustomAppBar(title: 'Control de Acceso'),
       body: BlocConsumer<IngresoBloc, IngresoState>(
-        
-         // ✅ Solo escuchamos cambios de status para no spamear SnackBars
-      listener: (context, newState) {
-          // TODO: implement listener
+        // ✅ Solo escuchamos cambios de status para no spamear SnackBars
+        listener: (context, newState) {
+          final response = newState.ingresoResponse;
+
+          if (response!.success) {
+            setState(() {
+              showMessageScanear = '¡Lectura exitosa!';
+              validate = true;
+            });
+          } else if (!response.success) {
+            setState(() {
+              showMessageScanear = response.message;
+              validate = false;
+            });
+          }
         },
         builder: (context, state) {
           return Stack(
             children: [
-              // 👇 SIEMPRE montado: así el controller está adjunto
+              //  SIEMPRE montado: así el controller está adjunto
               Positioned.fill(
                 child: MobileScanner(
                   controller: _controller,
                   onDetect: _onDetect,
                 ),
               ),
-
               // Éxito (cubre toda la pantalla cuando ya leyó)
               if (showSuccessScreen)
                 Positioned.fill(
                   child: Container(
-                    color: bgColor,
+                    color: validate ? Colors.green : Colors.red,
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
-                          Icons.check_circle_rounded,
+                        Icon(
+                          validate
+                              ? Icons.check_circle_rounded
+                              : Icons.error_rounded,
                           size: 96,
                           color: Colors.white,
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          '¡Lectura exitosa!',
+                          showMessageScanear,
+                          textAlign: TextAlign.center,
                           style: theme.textTheme.headlineSmall?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
-                        const SizedBox(height: 12),
-                        if (lastValue != null && lastValue!.isNotEmpty)
-                          Text(
-                            lastValue!,
-                            textAlign: TextAlign.center,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        const SizedBox(height: 24),
-                        FilledButton.icon(
-                          onPressed: _toggleScan, // volver a escanear
-                          icon: const Icon(Icons.qr_code_scanner),
-                          label: const Text('Escanear de nuevo'),
-                        ),
+                        // const SizedBox(height: 12),
+                        // if (lastValue != null && lastValue!.isNotEmpty)
+                        //   Text(
+                        //     lastValue!,
+                        //     textAlign: TextAlign.center,
+                        //     style: theme.textTheme.titleMedium?.copyWith(
+                        //       color: Colors.white,
+                        //       fontWeight: FontWeight.w600,
+                        //     ),
+                        //   ),
+                        // const SizedBox(height: 24),
+
                       ],
                     ),
                   ),

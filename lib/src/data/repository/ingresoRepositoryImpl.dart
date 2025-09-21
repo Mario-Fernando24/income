@@ -1,4 +1,5 @@
 import 'package:tickets_ingresos/src/data/datasource/remote/ingresoService.dart';
+import 'package:tickets_ingresos/src/domain/models/response/IngresoResponse.dart';
 import 'package:tickets_ingresos/src/domain/repository/IngresoRepository.dart';
 
 class Ingresorepositoryimp implements IngresoRepository {
@@ -7,7 +8,8 @@ class Ingresorepositoryimp implements IngresoRepository {
   Ingresorepositoryimp(this.ingresoServices);
 
   @override
-  Future<void> ingresoEvento(String qr) {
+  Future<IngresoResponse> ingresoEvento(String qr) {
+    
     return ingresoServices.ingresoEvento(qr);
   }
 

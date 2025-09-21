@@ -1,59 +1,49 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:tickets_ingresos/src/domain/models/response/IngresoResponse.dart';
 
 class IngresoServices {
-  final Dio _dio;
+  Future<IngresoResponse> ingresoEvento(String qr) async {
+    final Dio _dio = Dio();
 
-  IngresoServices()
-      : _dio = Dio(BaseOptions(
-          baseUrl: "https://tickets.dnpmotors.com/BackTK/public/api",
-          connectTimeout: const Duration(seconds: 10),
-          receiveTimeout: const Duration(seconds: 10),
-          headers: {'Content-Type': 'application/json'},
-        ));
-
-  /// Valida el QR en la API y devuelve un Map con resultado
-  Future<Map<String, dynamic>> ingresoEvento(String qr) async {
     try {
-      print("📡 Enviando QR: $qr");
+      print("Enviando QR => $qr");
 
       final response = await _dio.post(
-        "/boletas/validar-ingreso",
-        data: jsonEncode({'qr_data': qr}),
-        options: Options(
-          validateStatus: (status) => true, // evita excepción de Dio
-        ),
+        "https://tickets.dnpmotors.com/BackTK/public/api/boletas/validar-ingreso",
+        data: {'qr_data': qr},
+        options: Options(validateStatus: (_) => true),
       );
 
-      print("✅ Status: ${response.statusCode}, Data: ${response.data}");
+      print("Response  => ${response.data}");
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return {
-          "success": true,
-          "data": response.data,
-        };
-      } else {
-        return {
-          "success": false,
-          "message":
-              response.data?['message'] ?? "Error en la validación del QR",
-          "status": response.statusCode,
-          "data": response.data,
-        };
+      final statusCode = response.statusCode ?? 500;
+      final responseData = response.data;
+
+      if (statusCode == 200 || statusCode == 201) {
+        return IngresoResponse.fromJson(responseData);
       }
+
+      print("DIOS ES AMOR  => ${response.data}");
+
+      // aunque venga "success:false" también lo parseamos con el factory
+      return IngresoResponse.fromJson(responseData);
     } on DioException catch (e) {
-      print("❌ DioException: ${e.message}");
-      return {
-        "success": false,
-        "message": e.response?.data?['message'] ?? "Error de conexión",
-        "status": e.response?.statusCode,
-      };
-    } catch (e) {
-      print("⚠️ Error inesperado: $e");
-      return {
-        "success": false,
-        "message": "Error desconocido",
-      };
+      return IngresoResponse(
+        success: false,
+        message: e.response?.data?['message'] ??
+            (e.type == DioExceptionType.connectionTimeout
+                ? "Tiempo de conexión agotado"
+                : "Error de conexión"),
+        data: null,
+      );
+    } catch (e, s) {
+      print("Error inesperado: $e");
+      print("Stack: $s");
+      return IngresoResponse(
+        success: false,
+        message: "Error desconocido",
+        data: null,
+      );
     }
   }
 }

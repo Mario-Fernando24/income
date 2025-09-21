@@ -29,21 +29,21 @@ class _WelcomePageState extends State<WelcomePage> {
   void loanding() async {
     config = await dataApp.getConfiguratePreference();
     setState(() {
-      isLoading = false; 
+      isLoading = false;
     });
   }
 
   void showCustomBottomSheet(BuildContext context, String message) {
-  showModalBottomSheet(
-    isDismissible: true,
-    enableDrag: true,
-    context: context,
-    backgroundColor: Colors.transparent,
-    isScrollControlled: true,
-    builder: (BuildContext context) {
-      return CustomBottomSheet(message: message);
-    },
-  );
+    showModalBottomSheet(
+      isDismissible: true,
+      enableDrag: true,
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return CustomBottomSheet(message: message);
+      },
+    );
   }
 
   @override
@@ -97,9 +97,19 @@ class _WelcomePageState extends State<WelcomePage> {
                       textHex: config?.colorSecondary ?? "#0ea5e9",
                       onPressed: () {
                         if ((config?.apiName ?? "").isNotEmpty) {
-                          Navigator.pushNamed(context, AppRoutes.ingreso);
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.ingreso,
+                            arguments: {
+                              "primary": config?.colorPrimary ?? "#195E3D",
+                              "secondary": config?.colorSecondary ?? "#FAFFFD",
+                            },
+                          );
                         } else {
-                          showCustomBottomSheet(context, "Primero debes completar la configuración antes de usar el escáner.");
+                          showCustomBottomSheet(
+                            context,
+                            "Primero debes completar la configuración antes de usar el escáner.",
+                          );
                         }
                       },
                     ),
