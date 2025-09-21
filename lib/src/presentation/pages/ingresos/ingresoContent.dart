@@ -50,9 +50,11 @@ class _IngresoContentState extends State<IngresoContent> {
   bool scanning = false; // indica si procesamos lecturas
   bool torchOn = false;
   String? lastValue;
-  int scanCount = 0;
+  int scanCountSuccesss = 0;
+  int scanCountError = 0;
   String showMessageScanear = '';
   bool validate = false;
+  String fecha_ingreso_anterior = '';
 
   static const Color successTint = Color(0xFF16A34A);
   static const Color neutralTint = Colors.transparent;
@@ -61,7 +63,6 @@ class _IngresoContentState extends State<IngresoContent> {
   @override
   void initState() {
     super.initState();
-
     _ensureCounter();
   }
 
@@ -72,13 +73,19 @@ class _IngresoContentState extends State<IngresoContent> {
   }
 
   Future<void> _ensureCounter() async {
-    final value = await prefs.read('scan_count');
+    final value = await prefs.read('scan_count_sucesss');
     final loaded = (value is int) ? value : 0;
-    setState(() => scanCount = loaded);
-    if (value == null) await prefs.save('scan_count', 0);
+    setState(() => scanCountSuccesss = loaded);
+    if (value == null) await prefs.save('scan_count_sucesss', 0);
+
+    final valueError = await prefs.read('scan_count_error');
+    final loadedError = (valueError is int) ? valueError : int.tryParse('$valueError') ?? 0;
+    setState(() => scanCountError = loadedError);
+  if (valueError == null) await prefs.save('scan_count_error', 0);
   }
 
-  Future<void> _saveCounter() async => prefs.save('scan_count', scanCount);
+  Future<void> _saveCounterSuccess() async => prefs.save('scan_count_sucesss', scanCountSuccesss);
+  Future<void> _saveCounterError() async => prefs.save('scan_count_error', scanCountError);
 
   Future<void> _onDetect(BarcodeCapture capture) async {
     if (!scanning) return; // 👈 ignorar si no estamos escaneando
@@ -93,10 +100,8 @@ class _IngresoContentState extends State<IngresoContent> {
 
     setState(() {
       lastValue = value;
-      scanCount += 1;
       bgColor = successTint.withOpacity(0.9);
     });
-    await _saveCounter();
 
     // **No desmontamos el widget**; solo detenemos la cámara
     await _controller.stop();
@@ -117,7 +122,7 @@ class _IngresoContentState extends State<IngresoContent> {
         lastValue = null;
         bgColor = neutralTint;
       });
-      await _controller.start(); // ✅ ya está adjunto, no se desmonta
+      await _controller.start(); 
       setState(() => scanning = true);
     }
   }
@@ -127,16 +132,14 @@ class _IngresoContentState extends State<IngresoContent> {
     setState(() => torchOn = !torchOn);
   }
 
-  Future<void> _resetAll({bool resetCounter = false}) async {
-    setState(() {
-      lastValue = null;
-      bgColor = neutralTint;
-    });
-    if (resetCounter) {
-      setState(() => scanCount = 0);
-      await prefs.save('scan_count', 0);
-    }
-  }
+ Future<void> _resetAll() async {
+  await prefs.save('scan_count_sucesss', 0);
+  await prefs.save('scan_count_error', 0);
+  setState(() {
+    scanCountSuccesss = 0; 
+    scanCountError = 0;
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -147,19 +150,27 @@ class _IngresoContentState extends State<IngresoContent> {
       appBar: const CustomAppBar(title: 'Control de Acceso'),
       body: BlocConsumer<IngresoBloc, IngresoState>(
         // ✅ Solo escuchamos cambios de status para no spamear SnackBars
-        listener: (context, newState) {
+        listener: (context, newState) async{
           final response = newState.ingresoResponse;
 
           if (response!.success) {
             setState(() {
               showMessageScanear = '¡Lectura exitosa!';
               validate = true;
+              fecha_ingreso_anterior= response.fechaIngresoAnterior ?? "";
+              scanCountSuccesss += 1;
             });
+            await _saveCounterSuccess();
+
           } else if (!response.success) {
             setState(() {
               showMessageScanear = response.message;
               validate = false;
+              fecha_ingreso_anterior= response.fechaIngresoAnterior ?? "";
+              scanCountError += 1;
             });
+            await _saveCounterError();
+
           }
         },
         builder: (context, state) {
@@ -195,9 +206,21 @@ class _IngresoContentState extends State<IngresoContent> {
                           textAlign: TextAlign.center,
                           style: theme.textTheme.headlineSmall?.copyWith(
                             color: Colors.white,
-                            fontWeight: FontWeight.w800,
+                            fontSize: 20,
+                            fontFamily: 'MontserratBold'
                           ),
                         ),
+                        SizedBox(height: 10),
+                        Text(
+                          fecha_ingreso_anterior,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontFamily: 'MontserratRegular',
+                          ),
+                        ),
+                        
                         // const SizedBox(height: 12),
                         // if (lastValue != null && lastValue!.isNotEmpty)
                         //   Text(
@@ -274,7 +297,7 @@ class _IngresoContentState extends State<IngresoContent> {
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  '$scanCount',
+                                  '$scanCountSuccesss',
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
@@ -302,7 +325,7 @@ class _IngresoContentState extends State<IngresoContent> {
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  '$scanCount',
+                                  '$scanCountError',
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
@@ -374,7 +397,7 @@ class _IngresoContentState extends State<IngresoContent> {
                         ),
                         const SizedBox(width: 8),
                         IconButton(
-                          onPressed: () => _resetAll(resetCounter: true),
+                          onPressed: () => _resetAll(),
                           icon: const Icon(Icons.refresh, size: 28),
                           tooltip: 'Reiniciar contador a 0',
                         ),

@@ -26,7 +26,7 @@ class ConfigurationContent extends StatefulWidget {
 class _ConfigurationContentState extends State<ConfigurationContent> {
   late ConfigurationState state;
 
-  final _formKey = GlobalKey<FormState>(); // ✅ aquí
+  final _formKey = GlobalKey<FormState>(); 
 
   // Controllers y FocusNodes estables
   final _nameCtrl = TextEditingController();
@@ -79,7 +79,7 @@ class _ConfigurationContentState extends State<ConfigurationContent> {
             ..hideCurrentSnackBar()
             ..showSnackBar(
               const SnackBar(
-                content: Text('✅ Configuración guardada con éxito!'),
+                content: Text('Configuración guardada con éxito!'),
               ),
             );
 
@@ -93,7 +93,7 @@ class _ConfigurationContentState extends State<ConfigurationContent> {
             ..showSnackBar(
               SnackBar(
                 content: Text(
-                  '❌ ${newState.errorMessage ?? "Error al guardar configuración"}',
+                  ' ${newState.errorMessage ?? "Error al guardar configuración"}',
                 ),
               ),
             );

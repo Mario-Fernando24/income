@@ -13,7 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureDependencies();
   final jsonString = await prefs.read(PreferenceKeys.appConfiguration);
-  Color seedColor = Colors.cyan;
+  Color seedColor = Colors.green;
 
   if (jsonString != null && jsonString.isNotEmpty) {
     try {

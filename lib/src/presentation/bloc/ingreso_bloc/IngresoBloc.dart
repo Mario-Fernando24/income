@@ -21,14 +21,10 @@ class IngresoBloc extends Bloc<IngresoEvent, IngresoState> {
     });
 
     on<IngresoSubmit>((event, emit) async {
-      print("sumbaaa mariooooooooooooo fernando");
-      print("======> " + event.qr);
-      print("sumba mariooooooooo");
-
+    
       final respon = await ingresousecases.scanearIngresoUseCase.run(event.qr);
 
       ConfigurateRequest? config = await dataApp.getConfiguratePreference();
-
 
       if (config!.needScan) {
         if (respon.success) {
