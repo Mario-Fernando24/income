@@ -12,12 +12,12 @@ plugins {
 
 android {
     namespace = "com.example.tickets_ingresos"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = "27.0.12077973"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
@@ -29,8 +29,8 @@ android {
         applicationId = "com.example.tickets_ingresos"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion          // ✅ CORRECTO
-        targetSdk = 35     // ✅ CORRECTO
+        minSdk = 24
+        targetSdk = 36    // ✅ CORRECTO
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
