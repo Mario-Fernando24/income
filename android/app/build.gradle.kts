@@ -1,9 +1,14 @@
+// 👇 IMPORTS NECESARIOS PARA KOTLIN DSL
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")          // ✅ antes: kotlin-android
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
+
 
 android {
     namespace = "com.example.tickets_ingresos"
@@ -16,7 +21,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = "17"
     }
 
     defaultConfig {
@@ -24,7 +29,7 @@ android {
         applicationId = "com.example.tickets_ingresos"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 23          // ✅ CORRECTO
+        minSdk = flutter.minSdkVersion          // ✅ CORRECTO
         targetSdk = 35     // ✅ CORRECTO
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -38,6 +43,11 @@ android {
         }
     }
 }
+
+kotlin {
+    jvmToolchain(17)                            
+}
+
 
 flutter {
     source = "../.."
